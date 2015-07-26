@@ -1,0 +1,207 @@
+Microservices & Patterns in Distributed Systems
+& how Gilmour addresses those.
+
+Piyush Verma
+piyush@datascale.io
+@meson10
+
+Aditya Godbole
+aditya@datascale.io
+
+* Microservices
+
+* Why?
+
+Division of organisation/responsibility
+
+Scalability at function point granularity
+
+Improved software quality & reliability.
+
+Well defined component contracts.
+
+Dirt easy code maintenance in the long term.
+
+* Horizontal = Distributed
+
+* High level architecture patterns
+
+* #1 Observer Pattern
+
+* Observer Pattern characteristics
+
+Also called as Signal & Slots
+
+Broadcast - Fanout
+
+Wildcard topics
+
+Responses disabled
+
+Receivers are responsible for failures.
+
+* #2 Request Reply Pattern
+
+* Request Reply characteristics
+
+At least once delivery.
+
+  Ensure there is atleast one Subscriber.
+
+Timeouts
+
+  Client side timeouts.
+  Server side timeouts.
+
+Response or Error, guaranteed.
+
+Separate response and error channels.
+
+Distributed Mutual Exclusion
+
+  Subscriber groups
+
+* #3 Coalescing Pattern
+
+* Coalescing Pattern characteristics
+
+Lazy programmer's pipeline.
+
+Coalesce many calls and publish a single cumulative event
+
+compose
+
+  cmd1 | cmd2 | cmd3
+
+andand
+
+  cmd1 && cmd2 && cmd3
+
+batch
+
+  cmd1; cmd2; cmd3 > out
+  (cmd1; cmd2; cmd3) > out
+
+
+* Common Expectations
+
+* Common Expectations [1/2]
+
+Asynchronous messaging
+
+Low latency
+
+  Protocol and communication medium - non-http
+
+Health tracking
+
+  Service Level monitoring
+  Node Level availability
+
+High availability
+
+  Service level health
+
+Per message UID
+
+  Ensures uniqueness and data consistency
+
+* Common Expectations [2/2]
+
+Per Request logging
+
+  Easy to parse and analyse logs
+
+Concurrency
+
+  Logical
+  Physical
+  Distributed.
+
+Fault Diagnosis
+
+  Error broadcasting
+  Error queuing
+  Error ignoring
+
+* Message exchange protocol
+
+All gilmour services share the same data structure.
+
+Error or response have similar data structure.
+
+Human readable.
+
+* Failure Handling
+
+* Gilmour does not provide failure handling, only failure detection
+
+Honestly, we really spent a lot of time to decide against it.
+
+* Hystrix - per node heuristics
+
+Secondaries
+
+Failovers
+
+Backpressure management
+
+Circuit breaker
+
+* Nice subscribers
+
+Imagine a relay chain A -> B -> C
+And a threshold failure of 5, before a node is cut off.
+There are 5 subscribers for b B1, B2, B3, B4, and B5.
+
+A scenario where b* cannot talk to c.
+
+Note: Failure information is not distributed.
+
+A send a message to B, which could be received by either B1, B2, B3, B4 or B5.
+Each B tries 5 times to speak with C, resulting in 25 failure deliveres against A.
+
+Use nice to handle cascading.
+
+Can be used with/without hystix.
+
+* Patterns Gilmour does not handle
+
+* Other Patterns
+
+Load Balancing
+
+  Equal distribution of Load.
+  But You could use Nice subscribers to handle this!
+
+Partitioning/Sharding
+
+  Not network partitioning.
+  Subset of an event on subscriber registration.
+  Use smaller topics instead!
+
+Leader Election
+
+  Ability to select fittest node per message.
+
+Convergecast
+
+  Collate data from all listeners and return together.
+
+* Language Support
+
+* Current implementations
+
+Ruby
+
+  Runs on Event Machine.
+  Allows Fork per subscriber.
+  Stdout/Stderr hijacking for consolidated logging.
+
+Java
+
+Golang
+
+* Why did we name it gilmour?
+
+Just in case you wondered.
