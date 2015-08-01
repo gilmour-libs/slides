@@ -2,11 +2,8 @@ Patterns in Distributed Systems
 & how Gilmour addresses those.
 
 Piyush Verma
-piyush@datascale.io
+piyush@piyushverma.net
 @meson10
-
-Aditya Godbole
-aditya@datascale.io
 
 * Microservices
 
@@ -16,17 +13,13 @@ Division of organisation/responsibility
 
 Scalability at function point granularity
 
-Improved software quality & reliability.
-
-Well defined component contracts.
-
-Dirt easy code maintenance in the long term.
-
 * Horizontal = Distributed
 
 * High level architecture patterns
 
 * #1 Observer Pattern
+
+.image signal_slot.png
 
 * Observer Pattern characteristics
 
@@ -41,6 +34,8 @@ Responses disabled
 Receivers are responsible for failures.
 
 * #2 Request Reply Pattern
+
+.image request_response.png
 
 * Request Reply characteristics
 
@@ -61,9 +56,9 @@ Distributed Mutual Exclusion
 
   Subscriber groups
 
-* #3 Coalescing Pattern
+* #3 Service Composition
 
-* Coalescing Pattern characteristics
+* Composition Pattern characteristics
 
 Lazy programmer's pipeline.
 
@@ -136,7 +131,13 @@ Human readable.
 
 * Gilmour does not provide failure handling, only failure detection
 
-Honestly, we really spent a lot of time to decide against it.
+Health Bulletin [[https://github.com/gilmour-libs/health-bulletin]]
+
+.image missing_topics.png
+
+* Honestly, we really spent a lot of time to decide against it.
+
+.image unreachable_host.png
 
 * Hystrix - per node heuristics
 
@@ -150,20 +151,11 @@ Circuit breaker
 
 * Nice subscribers
 
-Imagine a relay chain A -> B -> C
-And a threshold failure of 5, before a node is cut off.
-There are 5 subscribers for b B1, B2, B3, B4, and B5.
+Use nice to _avoid_ cascading.
 
-A scenario where b* cannot talk to c.
+.image nice_subscribers.png
 
-Note: Failure information is not distributed.
-
-A send a message to B, which could be received by either B1, B2, B3, B4 or B5.
-Each B tries 5 times to speak with C, resulting in 25 failure deliveres against A.
-
-Use nice to handle cascading.
-
-Can be used with/without hystix.
+_Can_be_used_with/without_hystix_
 
 * Patterns Gilmour does not handle
 
