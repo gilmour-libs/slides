@@ -184,15 +184,7 @@ Convergecast
 
 * Current implementations
 
-Ruby
-
-  Runs on Event Machine.
-  Allows Fork per subscriber.
-  Stdout/Stderr hijacking for consolidated logging.
-
-Java
-
-Golang
+.image feature_matrix.png
 
 * Why did we name it gilmour?
 
