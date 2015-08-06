@@ -56,28 +56,6 @@ Distributed Mutual Exclusion
 
   Subscriber groups
 
-* #3 Service Composition
-
-* Composition Pattern characteristics
-
-Lazy programmer's pipeline.
-
-Coalesce many calls and publish a single cumulative event
-
-compose
-
-  cmd1 | cmd2 | cmd3
-
-andand
-
-  cmd1 && cmd2 && cmd3
-
-batch
-
-  cmd1; cmd2; cmd3 > out
-  (cmd1; cmd2; cmd3) > out
-
-
 * Common Expectations
 
 * Common Expectations [1/2]
@@ -118,6 +96,27 @@ Fault Diagnosis
   Error broadcasting
   Error queuing
   Error ignoring
+
+* #3 Service Composition
+
+* Composition Pattern characteristics
+
+Lazy programmer's pipeline.
+
+Coalesce many calls and publish a single cumulative event
+
+compose
+
+  cmd1 | cmd2 | cmd3
+
+andand
+
+  cmd1 && cmd2 && cmd3
+
+batch
+
+  cmd1; cmd2; cmd3 > out
+  (cmd1; cmd2; cmd3) > out
 
 * Message exchange protocol
 
@@ -186,6 +185,17 @@ Convergecast
 
 
 .iframe https://docs.google.com/spreadsheets/d/157rNAFwMOr5k9g_ab44EbVuRZ17aXWunD6dqPgsFXBE/edit?usp=sharing&single=true&gid=0&range=A1%3AE4&output=html 500 800
+
+
+* Examples
+
+* Fibonacci Series
+
+.image gilmour_fibonacci.png 550 800
+
+* Signal-Slot
+
+.image gilmour_slot.png 550 800
 
 * Why did we name it gilmour?
 
