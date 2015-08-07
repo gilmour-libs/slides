@@ -41,11 +41,6 @@ Scalability at function point granularity
 
 _You_know_who_to_blame_
 
-* Conway Law
-
-  Organizations which design systems are constrained to produce designs,
-  which are copies of the communication structures of these organizations.
-
 * Decentralize authority, responsibility and the blame.
 
   You build it, you run it - Werner Vogels
