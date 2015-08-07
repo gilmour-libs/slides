@@ -5,6 +5,32 @@ Piyush Verma
 piyush@piyushverma.net
 @meson10
 
+* Unix Philosophy
+
+* Rule of composition
+
+  Build short, simple, clear, modular, and  extendable code that can be easily maintained
+  and repurposed by developers other than its creators.
+  The philosophy is based on composable (as opposed to contextual) design.
+
+  CLIs can be connected to each other in Unix-like operating systems by pipes,
+  which are one of the most useful of the original UNIX innovations.
+
+Rule of Separation
+
+  Separate policy from mechanism; separate interfaces from engines.
+
+Plain Text
+
+  Write programs whose inputs and outputs both consist of plain text to the extent possible,
+  rather than binary (i.e., non-plain text) data.
+  Wait, what about SystemD?
+
+Rule of Silence
+
+  When a program has nothing surprising to say, it should say nothing.
+  But When you must fail, fail noisily and as soon as possible.
+
 * Microservices
 
 * Why?
@@ -13,7 +39,25 @@ Division of organisation/responsibility
 
 Scalability at function point granularity
 
-* Horizontal = Distributed
+_You_know_who_to_blame_
+
+* Conway Law
+
+  Organizations which design systems are constrained to produce designs,
+  which are copies of the communication structures of these organizations.
+
+* Decentralize authority, responsibility and the blame.
+
+  You build it, you run it - Werner Vogels
+
+* What is Gilmour?
+
+Gilmour is a framework for writing micro-services that exchange data over non-http transports.
+Currently the supported backend is Redis PubSub. Redis pubsub channels are used like "routes".
+
+Gilmour started off simply as a non-http alternative to Sinatra, but has grown into a feature rich microservices communication library and framework.
+
+And other reasons...
 
 * High level architecture patterns
 
@@ -32,6 +76,10 @@ Wildcard topics
 Responses disabled
 
 Receivers are responsible for failures.
+
+* Example
+
+.image gilmour_slot.png 550 800
 
 * #2 Request Reply Pattern
 
@@ -56,6 +104,10 @@ Distributed Mutual Exclusion
 
   Subscriber groups
 
+* Example (Request-Reply)
+
+.image gilmour_fibonacci.png 550 800
+
 * Common Expectations
 
 * Common Expectations [1/2]
@@ -66,6 +118,25 @@ Low latency
 
   Protocol and communication medium - non-http
 
+Concurrency
+
+  Logical
+  Physical
+  Distributed.
+
+Per message UID
+
+  Ensures uniqueness and data consistency
+
+Per Request logging
+
+  Easy to parse and analyse logs
+
+* Common Expectations [2/2]
+
+Failures
+- Things fail all the time.
+
 Health tracking
 
   Service Level monitoring
@@ -75,22 +146,6 @@ High availability
 
   Service level health
 
-Per message UID
-
-  Ensures uniqueness and data consistency
-
-* Common Expectations [2/2]
-
-Per Request logging
-
-  Easy to parse and analyse logs
-
-Concurrency
-
-  Logical
-  Physical
-  Distributed.
-
 Fault Diagnosis
 
   Error broadcasting
@@ -99,44 +154,135 @@ Fault Diagnosis
 
 * #3 Service Composition
 
-* Composition Pattern characteristics
+* Composition Pattern characteristics [1/2]
 
 Lazy programmer's pipeline.
 
 Coalesce many calls and publish a single cumulative event
 
-compose
+- compose
 
   cmd1 | cmd2 | cmd3
 
-andand
+- andand
 
   cmd1 && cmd2 && cmd3
 
-batch
+- batch
 
   cmd1; cmd2; cmd3 > out
   (cmd1; cmd2; cmd3) > out
+
+* Composition Pattern characteristics [2/2]
+
+- Combinations
+
+  You should be able to use these methods of composition in any combination
+  and also in a nexted manner.
+  - (cmd1 | cmd2) && cmd3
+
+- Continuation
+
+  Resume any previously failed operation.
 
 * Message exchange protocol
 
 All gilmour services share the same data structure.
 
+  {
+    data: The actual payload,
+    sender: The origin of the request (unique for each request),
+    code: The response code if this is a response. This uses HTTP error codes
+  }
+
 Error or response have similar data structure.
+
+  {
+      code: response code (non-200)
+      sender: the "sender" from the request
+      topic: the topic to which the request was sent
+      request_data: the request payload
+      userdata: implementation dependent debug infomation
+      backtrace: the backtrace of the error
+      timestamp: the timestamp of the error
+  }
 
 Human readable.
 
 * Failure Handling
 
-* Gilmour does not provide failure handling, only failure detection
+Gilmour does not provide failure handling, only failure detection.
 
-Health Bulletin [[https://github.com/gilmour-libs/health-bulletin]]
+You can pack services on nodes in any combination. and you get monitoring at both levels, orthogonal to each other
 
-.image missing_topics.png
+  {
+    "backtrace": "Required topics do not have any subscriber.",
+    "code": 500,
+    "userdata": {
+      "topics": [
+        "request.manager.bringup",
+        "request.manager.teardown",
+        "request.manager.info",
+        "request.manager.addnodes",
+        "request.manager.addusers",
+        "request.manager.removeusers",
+        "request.manager.updateusers",
+        "request.manager.reauthusers",
+        "request.manager.create",
+        "request.manager.teardown"
+      ]
+    }
+  }
 
-* Honestly, we really spent a lot of time to decide against it.
+* Node health Monitoring
 
-.image unreachable_host.png
+https://travis-ci.org/gilmour-libs/health-bulletin
+
+  {
+    "backtrace": "Unreachable hosts",
+    "code": 500,
+    "topic": "HealthCron",
+    "request_data": {
+    },
+    "userdata": {
+      "hosts": {
+        "ip-172-31-41-5-pid-16572-uuid-c6a946df-f8fc-46c2-b7be-8080ad81b887": {
+          "code": 404,
+          "data": null
+        }
+      }
+    },
+    "sender": "ip-172-31-41-5-pid-22242-uuid-5e20a8b6-f318-4a5c-a89e-64d238a278d7",
+    "multi_process": false,
+    "timestamp": "2015-08-07 16:00:17 UTC"
+  }
+
+* Language Support
+
+* Current implementations
+
+
+.iframe https://docs.google.com/spreadsheets/d/157rNAFwMOr5k9g_ab44EbVuRZ17aXWunD6dqPgsFXBE/edit?usp=sharing&single=true&gid=0&range=A1%3AE4&output=html 500 800
+
+
+* Hystrix - per node heuristics
+
+Secondaries
+
+Failovers
+
+Backpressure management
+
+Circuit breaker
+
+* Nice subscribers
+
+Use nice to _avoid_ cascading.
+
+.image nice_subscribers.png
+
+_Can_be_used_with/without_hystix_
+
 
 * Patterns Gilmour does not handle
 
@@ -160,42 +306,6 @@ Leader Election
 Convergecast
 
   Collate data from all listeners and return together.
-
-* Language Support
-
-* Current implementations
-
-
-.iframe https://docs.google.com/spreadsheets/d/157rNAFwMOr5k9g_ab44EbVuRZ17aXWunD6dqPgsFXBE/edit?usp=sharing&single=true&gid=0&range=A1%3AE4&output=html 500 800
-
-
-* Examples
-
-* Fibonacci Series
-
-.image gilmour_fibonacci.png 550 800
-
-* Signal-Slot
-
-.image gilmour_slot.png 550 800
-
-* Hystrix - per node heuristics
-
-Secondaries
-
-Failovers
-
-Backpressure management
-
-Circuit breaker
-
-* Nice subscribers
-
-Use nice to _avoid_ cascading.
-
-.image nice_subscribers.png
-
-_Can_be_used_with/without_hystix_
 
 * Why did we name it gilmour?
 
