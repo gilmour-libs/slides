@@ -138,24 +138,6 @@ Health Bulletin [[https://github.com/gilmour-libs/health-bulletin]]
 
 .image unreachable_host.png
 
-* Hystrix - per node heuristics
-
-Secondaries
-
-Failovers
-
-Backpressure management
-
-Circuit breaker
-
-* Nice subscribers
-
-Use nice to _avoid_ cascading.
-
-.image nice_subscribers.png
-
-_Can_be_used_with/without_hystix_
-
 * Patterns Gilmour does not handle
 
 * Other Patterns
@@ -196,6 +178,24 @@ Convergecast
 * Signal-Slot
 
 .image gilmour_slot.png 550 800
+
+* Hystrix - per node heuristics
+
+Secondaries
+
+Failovers
+
+Backpressure management
+
+Circuit breaker
+
+* Nice subscribers
+
+Use nice to _avoid_ cascading.
+
+.image nice_subscribers.png
+
+_Can_be_used_with/without_hystix_
 
 * Why did we name it gilmour?
 
