@@ -1,6 +1,8 @@
 Patterns in Distributed Systems
 & how Gilmour addresses those.
 
+https://github.com/gilmour-libs/gilmour
+
 Piyush Verma
 piyush@piyushverma.net
 @meson10
@@ -40,8 +42,6 @@ Division of organisation/responsibility
 Scalability at function point granularity
 
 _You_know_who_to_blame_
-
-* Decentralize authority, responsibility and the blame.
 
   You build it, you run it - Werner Vogels
 
